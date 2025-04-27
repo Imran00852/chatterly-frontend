@@ -53,7 +53,7 @@ const Login = () => {
         },
         config
       );
-      dispatch(userExists(data?.user));
+      dispatch(userExists(data.user));
       toast.success(data.message, {
         id: toastId,
       });
@@ -92,7 +92,7 @@ const Login = () => {
       toast.success(data.message, {
         id: toastId,
       });
-      dispatch(userExists(data?.user));
+      dispatch(userExists(data.user));
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong!", {
         id: toastId,
