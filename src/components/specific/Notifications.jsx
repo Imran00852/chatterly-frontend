@@ -28,8 +28,10 @@ const Notifications = () => {
 
   const friendRequestHandler = async ({ _id, accept }) => {
     dispatch(setIsNotification(false));
-    await acceptRequest("Accepting...", { requestId: _id, accept });
+    const message = accept ? "Accepting..." : "Rejecting...";
+    await acceptRequest(message, { requestId: _id, accept });
   };
+  
 
   const closeHandler = () => dispatch(setIsNotification(false));
 
@@ -78,7 +80,7 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         <Typography
           variant="body1"
           sx={{
-            flexGlow: 1,
+            flexGrow: 1,
             display: "-webkit-box",
             WebkitLineClamp: 1,
             WebkitBoxOrient: "vertical",
