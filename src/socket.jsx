@@ -7,7 +7,10 @@ const getSocket = () => useContext(SocketContext);
 
 const SocketProvider = ({ children }) => {
   const socket = useMemo(
-    () => io("http://localhost:8080", { withCredentials: true }),
+    () =>
+      io("https://chatterly-backend-g1pr.onrender.com", {
+        withCredentials: true,
+      }),
     []
   );
 
