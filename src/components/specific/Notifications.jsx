@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { memo } from "react";
+import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAsyncMutation, useErrors } from "../../hooks/hook";
 import {
@@ -17,11 +17,12 @@ import {
 } from "../../redux/api/api";
 import { setIsNotification } from "../../redux/reducers/misc";
 
-
 const Notifications = () => {
   const { isNotification } = useSelector((state) => state.misc);
-  const { isLoading, data, error, isError } = useGetNotificationsQuery();
+
   const dispatch = useDispatch();
+
+  const { isLoading, data, error, isError } = useGetNotificationsQuery();
 
   const [acceptRequest] = useAsyncMutation(useAcceptFriendRequestMutation);
 
@@ -30,29 +31,30 @@ const Notifications = () => {
     await acceptRequest("Accepting...", { requestId: _id, accept });
   };
 
+  const closeHandler = () => dispatch(setIsNotification(false));
+
   useErrors([{ error, isError }]);
+
   return (
-    <Dialog
-      open={isNotification}
-      onClose={() => dispatch(setIsNotification(false))}
-    >
+    <Dialog open={isNotification} onClose={closeHandler}>
       <Stack p={{ xs: "1rem", sm: "2rem" }} maxWidth={"25rem"}>
         <DialogTitle>Notifications</DialogTitle>
+
         {isLoading ? (
           <Skeleton />
         ) : (
           <>
             {data?.allRequests.length > 0 ? (
-              data?.allRequests.map((i) => (
+              data?.allRequests?.map(({ sender, _id }) => (
                 <NotificationItem
-                  key={i._id}
-                  sender={i.sender}
-                  _id={i._id}
+                  sender={sender}
+                  _id={_id}
                   handler={friendRequestHandler}
+                  key={_id}
                 />
               ))
             ) : (
-              <Typography textAlign={"center"}>0 Notifications</Typography>
+              <Typography textAlign={"center"}>0 notifications</Typography>
             )}
           </>
         )}
@@ -60,6 +62,7 @@ const Notifications = () => {
     </Dialog>
   );
 };
+
 const NotificationItem = memo(({ sender, _id, handler }) => {
   const { name, avatar } = sender;
   return (
@@ -71,10 +74,11 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         width={"100%"}
       >
         <Avatar />
+
         <Typography
           variant="body1"
           sx={{
-            flexGrow: 1,
+            flexGlow: 1,
             display: "-webkit-box",
             WebkitLineClamp: 1,
             WebkitBoxOrient: "vertical",
@@ -83,8 +87,9 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
             width: "100%",
           }}
         >
-          {`${name} sent you a friend request`}
+          {`${name} sent you a friend request.`}
         </Typography>
+
         <Stack
           direction={{
             xs: "column",
